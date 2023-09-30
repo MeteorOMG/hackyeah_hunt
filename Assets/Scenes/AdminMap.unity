@@ -841,6 +841,16 @@ MonoBehaviour:
   players: []
   playerBase: {fileID: 1437788709}
   playerId: 
+  data: '{"key": "board_change", "playerId": "8e589ac9-e954-4136-9b12-f9600ce6897e",
+    "payload": {"cellId": "10", "cellPosition": {"x": 0.0, "y": 0.0}, "type": 0}}'
+  msg:
+    key: board_change
+    playerId: 8e589ac9-e954-4136-9b12-f9600ce6897e
+    payload: '{"cellId":"10","cellPosition":{"x":0.0,"y":0.0},"type":0}'
+  cell:
+    cellId: 12
+    cellPosition: {x: 0, y: 0}
+    type: 21
 --- !u!4 &765541813
 Transform:
   m_ObjectHideFlags: 0

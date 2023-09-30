@@ -31,6 +31,12 @@ public class ClientMockup : MonoBehaviour
         Connect();
     }
 
+    private void Update()
+    {
+        if (ready)
+            UpdatePlayerPosition();
+    }
+
     public void Connect()
     {
         network.Connect(OnConnected);
