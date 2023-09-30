@@ -45,7 +45,7 @@ public class ClientMockup : MonoBehaviour
     [ContextMenu("Connect Player")]
     public void ConnectAsPlayer()
     {
-        network.SendData(JsonUtility.ToJson(new NewPlayerMessage()));
+        network.SendData(JsonUtility.ToJson(new ClientMessage()));
     }
 
     [ContextMenu("Update position")]
