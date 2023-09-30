@@ -16,7 +16,7 @@ public class NetworkController : MonoBehaviour
         Tls12 = 3072
     }
 
-    private WebSocket ws;
+    public WebSocket ws;
 
     [ContextMenu("Connect")]
     public void Connect()

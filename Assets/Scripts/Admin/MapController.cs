@@ -38,7 +38,7 @@ public class MapController : MonoBehaviour
 
     public void OnPlayerExit(string data)
     {
-        NewPlayerMessage msg = JsonUtility.FromJson<NewPlayerMessage>(data);
+        PlayerDeadMessage msg = JsonUtility.FromJson<PlayerDeadMessage>(data);
         if (msg != null)
         {
             MapPlayer player = players.Find(c => c.playerId == msg.playerId);
