@@ -61,6 +61,8 @@ public class ClientMockup : MonoBehaviour
     {
         ModifyCellMessage msg = new ModifyCellMessage(playerId, cellToModify);
         network.SendData(JsonUtility.ToJson(msg));
+
+        Debug.Log(JsonUtility.ToJson(msg));
     }
 
     [ContextMenu("BoneFound")]
