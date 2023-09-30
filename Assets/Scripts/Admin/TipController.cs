@@ -51,17 +51,17 @@ public class TipController : MonoBehaviour
 
     public void UpdateVis()
     {
-        if(selectedPlayer == null)
-        {
-            current.transform.position = Vector3.down * 100;
-            arrow.transform.position = Vector3.down * 100;
-            return;
-        }
+        current.gameObject.SetActive(selectedPlayer != null);
+        arrow.gameObject.SetActive(selectedPlayer != null);
 
-        current.transform.position = selectedPlayer.transform.position + Vector3.up;
+        if (selectedPlayer == null)
+            return;
+
+        current.transform.position = selectedPlayer.transform.position;
         current.text = selectedPlayer.currentHint.steps;
         var dir = selectedPlayer.currentHint.direction;
         arrow.transform.position = selectedPlayer.transform.position + (new Vector3(dir.x, 0f, dir.y) * arrowDist);
+        arrow.transform.rotation = Quaternion.LookRotation(selectedPlayer.transform.position - arrow.transform.position);
     }
 
     public void SendHintUpdate()

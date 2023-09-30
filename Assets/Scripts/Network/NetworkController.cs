@@ -29,7 +29,6 @@ public class NetworkController : MonoBehaviour
         ws = new WebSocket(serverAdress);
         var sslProtocolHack = (System.Security.Authentication.SslProtocols)(SslProtocolsHack.Tls12 | SslProtocolsHack.Tls11 | SslProtocolsHack.Tls);
         ws.SslConfiguration.EnabledSslProtocols = sslProtocolHack;
-        ws.OnMessage += Ws_OnMessage;
         ws.Connect();
         OnConnected?.Invoke();
     }

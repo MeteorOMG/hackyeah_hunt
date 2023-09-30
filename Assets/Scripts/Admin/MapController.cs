@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Events;
@@ -15,7 +16,7 @@ public class MapController : MonoBehaviour
 
     private NewPlayerMessage newPlayer;
     private Queue<PlayerPosMessage> newPos = new Queue<PlayerPosMessage>();
-    private Queue<BoardChangeMessage> newBoard = new Queue<BoardChangeMessage>();
+    private Queue<string> newBoard = new Queue<string>();
 
     private Dictionary<string, UnityAction<string>> responses = new Dictionary<string, UnityAction<string>>();
 
@@ -92,15 +93,34 @@ public class MapController : MonoBehaviour
 
     public void OnTileModified(string data)
     {
-        BoardChangeMessage msg = JsonUtility.FromJson<BoardChangeMessage>(data);
-        if (msg != null)
-        {
-            newBoard.Enqueue(msg);
-        }
+        newBoard.Enqueue(data);
     }
 
-    private void ModifyTile(BoardChangeMessage msg)
+    public string data;
+    public BoardChangeMessage msg;
+    public CellModel cell;
+
+    [ContextMenu("test")]
+    public void Test()
     {
+        msg = JsonUtility.FromJson<BoardChangeMessage>(data);
+        JObject jo = JObject.Parse(data);
+        var prop = jo.Properties().ToList().Find(c => c.Name == "payload");
+        string truVa = JsonConvert.SerializeObject(prop.Value);
+        msg.payload = truVa;
+
+        CellModel mod = JsonUtility.FromJson<CellModel>(msg.payload);
+        Debug.Log(mod.cellId);
+    }
+
+    private void ModifyTile(string data)
+    {
+        msg = JsonUtility.FromJson<BoardChangeMessage>(data);
+        JObject jo = JObject.Parse(data);
+        var prop = jo.Properties().ToList().Find(c => c.Name == "payload");
+        string truVa = JsonConvert.SerializeObject(prop.Value);
+        msg.payload = truVa;
+
         CellModel mod = JsonUtility.FromJson<CellModel>(msg.payload);
         var cell = generator.currentCells.Find(c => c.model.cellId == mod.cellId);
         if (cell != null)
