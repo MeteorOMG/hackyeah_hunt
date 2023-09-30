@@ -5,6 +5,6 @@ using UnityEngine;
 [System.Serializable]
 public class NewPlayerMessage
 {
+    public string key = "new_player_enter";
     public string playerId;
-    public string payload;
 }

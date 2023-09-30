@@ -80,8 +80,7 @@ public class ClientMockup : MonoBehaviour
     {
         JObject msg = JObject.Parse(e.Data);
         JProperty prop = msg.Properties().ToList().Find(c => c.Name == "key");
-        if (responses.ContainsKey(prop.Name))
-            responses[prop.Name]?.Invoke(e.Data);
+        responses[prop.Value.ToString()]?.Invoke(e.Data);
     }
 
     private void OnHintReceived(string data)
