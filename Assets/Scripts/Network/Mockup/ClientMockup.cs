@@ -8,6 +8,7 @@ using UnityEngine.Events;
 
 public class ClientMockup : MonoBehaviour
 {
+    public RectTransform winInformation;
     public Transform player;
     public Transform localSpaceOfPlayer;
 
@@ -25,6 +26,7 @@ public class ClientMockup : MonoBehaviour
     public MapModel currentMap;
     public ClientTip tp;
     public float sendingInterval;
+    public bool showWin;
 
     public ClientMapGenerator mapGen;
 
@@ -36,12 +38,13 @@ public class ClientMockup : MonoBehaviour
         responses.Add("assigned", OnIDAssigned);
         responses.Add("board_change", OnTileModified);
         responses.Add("send_board", OnBoardGenerated);
+        responses.Add("game_ends", OnGameEneded);
         Connect();
     }
 
     private void Update()
     {
-        
+        winInformation.transform.gameObject.SetActive(showWin);
     }
 
     private IEnumerator UpdatePost()
@@ -151,6 +154,11 @@ public class ClientMockup : MonoBehaviour
     {
         BoardChangeMessage msg = JsonUtility.FromJson<BoardChangeMessage>(data);
         mapGen.GenerateMap(JsonUtility.FromJson<MapModel>(msg.payload));
+    }
+
+    public void OnGameEneded(string msg)
+    {
+        showWin = true;
     }
 
     private void OnApplicationQuit()

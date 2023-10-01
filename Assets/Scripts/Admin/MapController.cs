@@ -17,7 +17,7 @@ public class MapController : MonoBehaviour
     public string playerId;
 
     public List<Color> playerColors;
-
+    private bool showEnd;
     private NewPlayerMessage newPlayer;
     private Queue<PlayerPosMessage> newPos = new Queue<PlayerPosMessage>();
     private Queue<string> newBoard = new Queue<string>();
@@ -56,6 +56,8 @@ public class MapController : MonoBehaviour
                 newBoard.Dequeue();
             }
         }
+
+        winInformation.gameObject.SetActive(showEnd);
 
     }
 
