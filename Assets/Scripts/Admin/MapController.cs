@@ -8,6 +8,8 @@ using UnityEngine.Events;
 
 public class MapController : MonoBehaviour
 {
+    public RectTransform winInformation;
+
     public NetworkController network;
     public AdminMapGenerator generator;
     public List<MapPlayer> players;
@@ -29,6 +31,7 @@ public class MapController : MonoBehaviour
         responses.Add("new_player_enter", OnPlayerEntered);
         responses.Add("playerLeave", OnPlayerExit);
         responses.Add("move", OnPlayerMoved);
+        responses.Add("game_ends", OnGameEneded);
     }
 
     private void Update()
@@ -172,6 +175,11 @@ public class MapController : MonoBehaviour
             if (cell != null)
                 cell.PlayerEnter();
         }
+    }
+
+    public void OnGameEneded(string msg)
+    {
+        winInformation.gameObject.SetActive(true);
     }
     #endregion
 }

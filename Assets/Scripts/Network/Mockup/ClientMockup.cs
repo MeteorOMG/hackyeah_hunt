@@ -111,6 +111,7 @@ public class ClientMockup : MonoBehaviour
     private void Ws_OnMessage(object sender, WebSocketSharp.MessageEventArgs e)
     {
         JObject msg = JObject.Parse(e.Data);
+        Debug.Log(e.Data);
         JProperty prop = msg.Properties().ToList().Find(c => c.Name == "key");
         responses[prop.Value.ToString()]?.Invoke(e.Data);
     }
