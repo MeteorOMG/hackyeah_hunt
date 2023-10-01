@@ -8,6 +8,7 @@ using UnityEngine.Events;
 
 public class ClientMockup : MonoBehaviour
 {
+    public Transform player;
     public NetworkController network;
     public bool ready;
 
@@ -21,6 +22,8 @@ public class ClientMockup : MonoBehaviour
     public HintModel currentHint;
     public MapModel currentMap;
 
+    public float sendingInterval;
+
     private Dictionary<string, UnityAction<string>> responses = new Dictionary<string, UnityAction<string>>();
 
     private void Start()
@@ -33,8 +36,14 @@ public class ClientMockup : MonoBehaviour
 
     private void Update()
     {
-        if (ready)
-            UpdatePlayerPosition();
+        
+    }
+
+    private IEnumerator UpdatePost()
+    {
+        yield return new WaitForSeconds(sendingInterval);
+        UpdatePlayerPosition();
+        StartCoroutine(UpdatePost());
     }
 
     public void Connect()
@@ -46,6 +55,8 @@ public class ClientMockup : MonoBehaviour
     {
         ready = true;
         network.ws.OnMessage += Ws_OnMessage;
+        ConnectAsPlayer();
+        StartCoroutine(UpdatePost());
     }
 
     [ContextMenu("Connect Player")]
@@ -57,6 +68,8 @@ public class ClientMockup : MonoBehaviour
     [ContextMenu("Update position")]
     public void UpdatePlayerPosition()
     {
+        posMod.position = player.transform.position;
+        posMod.rotation = player.transform.rotation.eulerAngles;
         posMsg.playerId = playerId;
         posMsg.payload = JsonUtility.ToJson(posMod);
         network.SendData(JsonUtility.ToJson(posMsg));
@@ -118,5 +131,10 @@ public class ClientMockup : MonoBehaviour
             var cell = currentMap.cells.Find(c => c.cellId == mod.cellId);
             cell.type = mod.type;
         }
+    }
+
+    private void OnApplicationQuit()
+    {
+        Died();
     }
 }

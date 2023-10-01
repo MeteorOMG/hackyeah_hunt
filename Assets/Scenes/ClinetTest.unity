@@ -261,6 +261,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c726b424a74244b9c8c2a2a0f8671f69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 1587226480}
   network: {fileID: 401255333}
   ready: 0
   posMsg:
@@ -284,6 +285,7 @@ MonoBehaviour:
     mapWidth: 0
     mapHeight: 0
     cells: []
+  sendingInterval: 3
 --- !u!4 &401255335
 Transform:
   m_ObjectHideFlags: 0
