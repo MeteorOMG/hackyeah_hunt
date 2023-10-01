@@ -21,6 +21,7 @@ public class MapController : MonoBehaviour
     private NewPlayerMessage newPlayer;
     private Queue<PlayerPosMessage> newPos = new Queue<PlayerPosMessage>();
     private Queue<string> newBoard = new Queue<string>();
+    private Queue<string> playExit = new Queue<string>();
 
     private Dictionary<string, UnityAction<string>> responses = new Dictionary<string, UnityAction<string>>();
 
@@ -32,6 +33,8 @@ public class MapController : MonoBehaviour
         responses.Add("playerLeave", OnPlayerExit);
         responses.Add("move", OnPlayerMoved);
         responses.Add("game_ends", OnGameEneded);
+
+        ConnectToServer();
     }
 
     private void Update()
@@ -45,6 +48,15 @@ public class MapController : MonoBehaviour
             {
                 MovePlayer(newPos.Peek());
                 newPos.Dequeue();
+            }
+        }
+
+        if(playExit.Count > 0)
+        {
+            while(playExit.Count > 0)
+            {
+                RemovePlay(playExit.Peek());
+                playExit.Dequeue();
             }
         }
 
@@ -135,16 +147,27 @@ public class MapController : MonoBehaviour
 
     public void OnPlayerExit(string data)
     {
-        Debug.Log(data);
-        PlayerDeadMessage msg = JsonUtility.FromJson<PlayerDeadMessage>(data);
-        Debug.Log(msg);
+        playExit.Enqueue(data);
+    }
+
+    private void RemovePlay(string data)
+    {
+        var msg = JsonUtility.FromJson<PlayerDeadMessage>(data);
+        JObject jo = JObject.Parse(data);
+        var prop = jo.Properties().ToList().Find(c => c.Name == "playerId");
+        string truVa = JsonConvert.SerializeObject(prop.Value);
+        msg.playerId = truVa.Remove(0, 1);
+        msg.playerId = msg.playerId.Remove(msg.playerId.Length - 1, 1);
+
+        //PlayerDeadMessage msg = JsonUtility.FromJson<PlayerDeadMessage>(data);
+        Debug.Log(msg.playerId);
         if (msg != null)
         {
             MapPlayer player = players.Find(c => c.playerId == msg.playerId);
             if (player != null)
             {
                 players.Remove(player);
-                GameObject.Destroy(player);
+                GameObject.Destroy(player.gameObject);
             }
         }
     }
