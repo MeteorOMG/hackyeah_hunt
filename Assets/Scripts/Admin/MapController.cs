@@ -14,6 +14,8 @@ public class MapController : MonoBehaviour
     public MapPlayer playerBase;
     public string playerId;
 
+    public List<Color> playerColors;
+
     private NewPlayerMessage newPlayer;
     private Queue<PlayerPosMessage> newPos = new Queue<PlayerPosMessage>();
     private Queue<string> newBoard = new Queue<string>();
@@ -122,6 +124,7 @@ public class MapController : MonoBehaviour
         MapPlayer newPlayer = Instantiate(playerBase, transform);
         newPlayer.playerId = this.newPlayer.playerId;
         newPlayer.gameObject.SetActive(true);
+        newPlayer.Init(playerColors[players.Count % playerColors.Count]);
         players.Add(newPlayer);
         this.newPlayer = null;
     }
