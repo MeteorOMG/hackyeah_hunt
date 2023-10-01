@@ -6,6 +6,7 @@ public class ClientCell : MonoBehaviour
 {
     public CellModel model;
     public SpriteRenderer spriteRend;
+    public Sprite diggedSprite;
 
     public Color highColor;
     public Color defCol;
@@ -31,5 +32,10 @@ public class ClientCell : MonoBehaviour
     public void OnHighlightEnded()
     {
         taken = false;
+    }
+
+    public void OnDigged()
+    {
+        spriteRend.sprite = diggedSprite;
     }
 }

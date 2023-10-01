@@ -38,6 +38,7 @@ public class ClientController : MonoBehaviour
     {
         Debug.Log("Bone");
         var cell = raycaster.currentCell;
+        cell.OnDigged();
         cell.model.type = 0;
         ModifyCellMessage msg = new ModifyCellMessage(mock.playerId, cell.model);
         network.SendData(JsonUtility.ToJson(msg));

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
@@ -14,7 +15,7 @@ using UnityEngine.XR.ARSubsystems;
 [RequireComponent(typeof(ARPlaneManager))]
 public class AnchorCreator : MonoBehaviour
 {
-
+    public Button reactivate;
     public Transform map;
     // This is the prefab that will appear every time an anchor is created.
     [SerializeField]
@@ -46,6 +47,7 @@ public class AnchorCreator : MonoBehaviour
         m_AnchorManager = GetComponent<ARAnchorManager>();
         m_PlaneManager = GetComponent<ARPlaneManager>();
         m_AnchorPoints = new List<ARAnchor>();
+        reactivate.onClick.AddListener(() => gameObject.SetActive(true));
     }
 
     void Update()
@@ -57,7 +59,7 @@ public class AnchorCreator : MonoBehaviour
         var touch = Input.GetTouch(0);
         if (touch.phase != TouchPhase.Began)
             return;
-
+        
         if (m_RaycastManager.Raycast(touch.position, s_Hits, TrackableType.PlaneWithinPolygon))
         {
             // Raycast hits are sorted by distance, so the first one
@@ -82,6 +84,7 @@ public class AnchorCreator : MonoBehaviour
                 // Stores the anchor so that it may be removed later.
                 map.transform.position = anchor.transform.position;
                 m_AnchorPoints.Add(anchor);
+                enabled = false;
             }
         }
     }
