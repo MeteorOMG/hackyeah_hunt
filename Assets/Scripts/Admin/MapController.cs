@@ -58,7 +58,6 @@ public class MapController : MonoBehaviour
         }
 
         winInformation.gameObject.SetActive(showEnd);
-
     }
 
     [ContextMenu("Connect")]
@@ -181,7 +180,7 @@ public class MapController : MonoBehaviour
 
     public void OnGameEneded(string msg)
     {
-        winInformation.gameObject.SetActive(true);
+        showEnd = true;
     }
     #endregion
 }
