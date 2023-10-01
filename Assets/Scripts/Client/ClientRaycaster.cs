@@ -41,6 +41,6 @@ public class ClientRaycaster : MonoBehaviour
                 break;
         }
 
-        OnNothing?.Invoke();
+        //OnNothing?.Invoke();
     }
 }

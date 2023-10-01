@@ -9,6 +9,8 @@ using UnityEngine.Events;
 public class ClientMockup : MonoBehaviour
 {
     public Transform player;
+    public Transform localSpaceOfPlayer;
+
     public NetworkController network;
     public bool ready;
 
@@ -21,8 +23,10 @@ public class ClientMockup : MonoBehaviour
     public string playerId;
     public HintModel currentHint;
     public MapModel currentMap;
-
+    public ClientTip tp;
     public float sendingInterval;
+
+    public ClientMapGenerator mapGen;
 
     private Dictionary<string, UnityAction<string>> responses = new Dictionary<string, UnityAction<string>>();
 
@@ -31,6 +35,7 @@ public class ClientMockup : MonoBehaviour
         responses.Add("hint", OnHintReceived);
         responses.Add("assigned", OnIDAssigned);
         responses.Add("board_change", OnTileModified);
+        responses.Add("send_board", OnBoardGenerated);
         Connect();
     }
 
@@ -68,8 +73,14 @@ public class ClientMockup : MonoBehaviour
     [ContextMenu("Update position")]
     public void UpdatePlayerPosition()
     {
-        posMod.position = player.transform.position;
-        posMod.rotation = player.transform.rotation.eulerAngles;
+        posMod.position = localSpaceOfPlayer.InverseTransformPoint(player.transform.position);
+        //posMod.rotation = localSpaceOfPlayer.InverseTransformPoint(player.transform.rotation.eulerAngles);
+        Quaternion localRotation = Quaternion.Inverse(localSpaceOfPlayer.transform.rotation) * player.transform.rotation;
+        var euler = localRotation.eulerAngles;
+        euler.x = 0f;
+        euler.z = 0f;
+        posMod.rotation = euler;
+
         posMsg.playerId = playerId;
         posMsg.payload = JsonUtility.ToJson(posMod);
         network.SendData(JsonUtility.ToJson(posMsg));
@@ -110,6 +121,8 @@ public class ClientMockup : MonoBehaviour
         if(msg != null)
         {
             currentHint = JsonUtility.FromJson<HintModel>(msg.payload);
+            tp.currentHint = currentHint;
+            tp.SetTip();
         }
     }
 
@@ -131,6 +144,12 @@ public class ClientMockup : MonoBehaviour
             var cell = currentMap.cells.Find(c => c.cellId == mod.cellId);
             cell.type = mod.type;
         }
+    }
+
+    public void OnBoardGenerated(string data)
+    {
+        BoardChangeMessage msg = JsonUtility.FromJson<BoardChangeMessage>(data);
+        mapGen.GenerateMap(JsonUtility.FromJson<MapModel>(msg.payload));
     }
 
     private void OnApplicationQuit()

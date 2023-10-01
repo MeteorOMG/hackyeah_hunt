@@ -77,7 +77,6 @@ public class MapController : MonoBehaviour
     private void Ws_OnMessage(object sender, WebSocketSharp.MessageEventArgs e)
     {
         JObject msg = JObject.Parse(e.Data);
-        Debug.Log(e.Data);
         JProperty prop = msg.Properties().ToList().Find(c => c.Name == "key");
         responses[prop.Value.ToString()]?.Invoke(e.Data);
     }
@@ -129,6 +128,7 @@ public class MapController : MonoBehaviour
 
     public void OnPlayerExit(string data)
     {
+        Debug.Log(data);
         PlayerDeadMessage msg = JsonUtility.FromJson<PlayerDeadMessage>(data);
         Debug.Log(msg);
         if (msg != null)
@@ -153,8 +153,11 @@ public class MapController : MonoBehaviour
 
     private void MovePlayer(PlayerPosMessage msg)
     {
+        if (players.Count == 0 || msg.playerId == null || msg.playerId == string.Empty)
+            return;
+
         var player = players.Find(c => c.playerId == msg.playerId);
-        player.MovePlayer(JsonUtility.FromJson<PlayerPositionModel>(msg.payload));
+        player?.MovePlayer(JsonUtility.FromJson<PlayerPositionModel>(msg.payload));
 
         foreach (var cell in generator.currentCells)
             cell.PlayerExit();

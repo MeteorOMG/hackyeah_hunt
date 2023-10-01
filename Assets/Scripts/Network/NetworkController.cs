@@ -59,4 +59,9 @@ public class NetworkController : MonoBehaviour
     {
         ws.Send(data);
     }
+
+    private void OnApplicationQuit()
+    {
+        ws.Close();
+    }
 }
