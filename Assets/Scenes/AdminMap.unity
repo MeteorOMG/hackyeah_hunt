@@ -2334,6 +2334,7 @@ MonoBehaviour:
     extra: 
   rrends:
   - {fileID: 1540314278}
+  speed: 12
 --- !u!4 &1437788710
 Transform:
   m_ObjectHideFlags: 0

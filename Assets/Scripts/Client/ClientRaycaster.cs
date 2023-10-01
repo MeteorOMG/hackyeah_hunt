@@ -8,6 +8,7 @@ public class ClientRaycaster : MonoBehaviour
     public float rayDist;
     public GameObject rayVis;
     public ClientMapGenerator map;
+    public Transform mine;
 
     public ClientCell currentCell;
 
@@ -37,10 +38,20 @@ public class ClientRaycaster : MonoBehaviour
                 break;
 
             case 0:
-                OnDeath?.Invoke();
+                //OnDeath?.Invoke();
+                StartCoroutine(SpawnMien(OnDeath));
                 break;
         }
 
         //OnNothing?.Invoke();
+    }
+
+    private IEnumerator SpawnMien(UnityAction action)
+    {
+        mine.transform.position = currentCell.transform.position;
+        yield return new WaitForSeconds(1f);
+        mine.transform.localScale = Vector3.one * 2f;
+        yield return new WaitForSeconds(1f);
+        action?.Invoke();
     }
 }

@@ -10,6 +10,10 @@ public class MapPlayer : MonoBehaviour
 
     public List<SpriteRenderer> rrends;
 
+    private Vector3 targetPos;
+    private Quaternion targetRot;
+    public float speed;
+
     public void Init(Color col)
     {
         foreach (var rend in rrends)
@@ -18,7 +22,17 @@ public class MapPlayer : MonoBehaviour
 
     public void MovePlayer(PlayerPositionModel model)
     {
-        transform.localPosition = model.position;
-        transform.localRotation = Quaternion.Euler(model.rotation);
+        //transform.localPosition = model.position;
+        //transform.localRotation = Quaternion.Euler(model.rotation);
+
+        targetPos = model.position;
+        targetPos.y = 0f;
+        targetRot = Quaternion.Euler(model.rotation);
+    }
+
+    private void Update()
+    {
+        transform.localPosition = Vector3.Lerp(transform.localPosition, targetPos, Time.deltaTime * speed);
+        transform.localRotation = Quaternion.Lerp(transform.localRotation, targetRot, Time.deltaTime * speed);
     }
 }
