@@ -14,6 +14,8 @@ using UnityEngine.XR.ARSubsystems;
 [RequireComponent(typeof(ARPlaneManager))]
 public class AnchorCreator : MonoBehaviour
 {
+
+    public Transform map;
     // This is the prefab that will appear every time an anchor is created.
     [SerializeField]
     GameObject m_AnchorPrefab;
@@ -78,6 +80,7 @@ public class AnchorCreator : MonoBehaviour
             else
             {
                 // Stores the anchor so that it may be removed later.
+                map.transform.position = anchor.transform.position;
                 m_AnchorPoints.Add(anchor);
             }
         }

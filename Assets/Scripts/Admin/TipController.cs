@@ -14,11 +14,23 @@ public class TipController : MonoBehaviour
     public string currentSteps;
 
     [Header("UI")]
+    public RectTransform uiRect;
     public Button moveUp;
     public Button moveDown;
     public Button moveLeft;
     public Button moveRight;
     public TMP_InputField steps;
+    private Dictionary<Vector2, Button> buttonsForDict = new Dictionary<Vector2, Button>();
+    public Color selectedColor;
+    public Color notSelectedColor;
+
+    private void Awake()
+    {
+        buttonsForDict.Add(Vector2.up, moveUp);
+        buttonsForDict.Add(Vector2.down, moveDown);
+        buttonsForDict.Add(Vector2.left, moveLeft);
+        buttonsForDict.Add(Vector2.right, moveRight);
+    }
 
     public TextMeshPro current;
     public Transform arrow;
@@ -43,6 +55,9 @@ public class TipController : MonoBehaviour
             {
                 MapPlayer player = hit.collider.GetComponent<MapPlayer>();
                 selectedPlayer = player;
+            } else
+            {
+                selectedPlayer = null;
             }
         }
         
@@ -51,17 +66,18 @@ public class TipController : MonoBehaviour
 
     public void UpdateVis()
     {
-        current.gameObject.SetActive(selectedPlayer != null);
-        arrow.gameObject.SetActive(selectedPlayer != null);
-
         if (selectedPlayer == null)
+        {
+            uiRect.position = new Vector3(1000, 1000f, 0f);
             return;
-
-        current.transform.position = selectedPlayer.transform.position;
-        current.text = selectedPlayer.currentHint.steps;
-        var dir = selectedPlayer.currentHint.direction;
-        arrow.transform.position = selectedPlayer.transform.position + (new Vector3(dir.x, 0f, dir.y) * arrowDist);
-        arrow.transform.rotation = Quaternion.LookRotation(selectedPlayer.transform.position - arrow.transform.position);
+        }
+            
+        
+        uiRect.position = cam.WorldToScreenPoint(selectedPlayer.transform.position);
+        foreach(var btn in buttonsForDict)
+        {
+            btn.Value.image.color = currentDirection == btn.Key ? selectedColor : notSelectedColor;
+        }
     }
 
     public void SendHintUpdate()

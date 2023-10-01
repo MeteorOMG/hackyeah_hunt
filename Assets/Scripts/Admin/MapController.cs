@@ -96,26 +96,9 @@ public class MapController : MonoBehaviour
         newBoard.Enqueue(data);
     }
 
-    public string data;
-    public BoardChangeMessage msg;
-    public CellModel cell;
-
-    [ContextMenu("test")]
-    public void Test()
-    {
-        msg = JsonUtility.FromJson<BoardChangeMessage>(data);
-        JObject jo = JObject.Parse(data);
-        var prop = jo.Properties().ToList().Find(c => c.Name == "payload");
-        string truVa = JsonConvert.SerializeObject(prop.Value);
-        msg.payload = truVa;
-
-        CellModel mod = JsonUtility.FromJson<CellModel>(msg.payload);
-        Debug.Log(mod.cellId);
-    }
-
     private void ModifyTile(string data)
     {
-        msg = JsonUtility.FromJson<BoardChangeMessage>(data);
+        var msg = JsonUtility.FromJson<BoardChangeMessage>(data);
         JObject jo = JObject.Parse(data);
         var prop = jo.Properties().ToList().Find(c => c.Name == "payload");
         string truVa = JsonConvert.SerializeObject(prop.Value);
